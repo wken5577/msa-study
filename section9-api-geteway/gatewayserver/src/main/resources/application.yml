@@ -8,7 +8,7 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true # Enable service discovery
+          enabled: true # Enable service discovery, false로하면 routes에 직접 url을 지정해야함
           lower-case-service-id: true # Convert service id to lowercase /ACCOUNTS -> /accounts
 
 management:
