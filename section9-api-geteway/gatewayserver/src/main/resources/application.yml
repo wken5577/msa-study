@@ -28,3 +28,11 @@ info:
     name: "gatewayserver"
     description: "Gateway Server Application"
     version: "1.0.0"
+
+
+#이렇게 해야 debug log가 찍힌다.
+logging:
+  level:
+    com:
+      msa:
+        gatewayserver: DEBUG
