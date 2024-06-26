@@ -80,3 +80,16 @@ resilience4j.circuitbreaker:
       permittedNumberOfCallsInHalfOpenState: 2 # half-open 상태에서 허용되는 호출 수
       failureRateThreshold: 50 # 실패율이 50% 이상이면 circuit open
       waitDurationInOpenState: 10000 # circuit open 상태에서 대기 시간 (ms)
+
+
+resilience4j.retry:
+  configs:
+    default:
+      maxRetryAttempts: 3
+      waitDuration: 100
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      ignore-exceptions:
+        - java.lang.NullPointerException # null pointer exception 발생시 retry하지 않음
+      retry-exceptions:
+        - java.util.concurrent.TimeoutException # timeout exception 발생시에만 retry함 다른 예와는 자동적으로 무시된다.
