@@ -93,3 +93,10 @@ resilience4j.retry:
         - java.lang.NullPointerException # null pointer exception 발생시 retry하지 않음
       retry-exceptions:
         - java.util.concurrent.TimeoutException # timeout exception 발생시에만 retry함 다른 예와는 자동적으로 무시된다.
+
+resilience4j.ratelimiter:
+  configs:
+    default:
+      timeoutDuration: 1000      # Rate Limiter가 요청을 처리할 수 있는 용량을 초과했을 때, 추가 요청은 최대 1초 동안 대기. 만약 1초가 지나도 용량이 확보되지 않으면, 요청은 실패(타임아웃) 처리.
+      limitRefreshPeriod: 5000   # Rate Limiter의 용량이 새로 고침되는 주기를 밀리초 단위로 정의
+      limitForPeriod: 1          # limitRefreshPeriod 기간 동안 허용되는 최대 요청 수를 정의
