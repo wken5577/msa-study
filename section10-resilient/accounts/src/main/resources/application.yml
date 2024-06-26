@@ -1,0 +1,82 @@
+
+server:
+  port: 8080
+spring:
+  application:
+    name: "accounts"
+  profiles:
+    active: "qa"
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+endpoints:
+  shutdown:
+    enabled: true
+
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+info:
+  app:
+    name: "accounts"
+    description: "Accounts Application"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      eazybytes:
+        accounts: DEBUG
+
+# resilience4j 설정
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10 # 10개의 요청을 모니터링한 후 해당 작업을 계속할지 여부를 결정 (closed -> open으로 바꿔야할지 판별)
+      permittedNumberOfCallsInHalfOpenState: 2 # half-open 상태에서 허용되는 호출 수
+      failureRateThreshold: 50 # 실패율이 50% 이상이면 circuit open
+      waitDurationInOpenState: 10000 # circuit open 상태에서 대기 시간 (ms)
