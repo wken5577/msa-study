@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: "gatewayserver"
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Enable service discovery, false로하면 routes에 직접 url을 지정해야함
+          lower-case-service-id: true # Convert service id to lowercase /ACCOUNTS -> /accounts
+
+      # resilience4j의 circuit breaker 패텉 사용시 fallback url로 redirect할 수 있음
+      # 하지만 resilience4j를 사용하지 않을 때 response를 무작정 기다리지 않게 하기 위해 timeout을 설정해줘야함
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 10s
+  data:
+    redis:
+      connect-timeout: 2s
+      host: localhost
+      port: 6379
+      timeout: 1s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "Gateway Server Application"
+    version: "1.0.0"
+
+
+#이렇게 해야 debug log가 찍힌다.
+logging:
+  level:
+    com:
+      msa:
+        gatewayserver: DEBUG
+
+# resilience4j 설정
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10 # 10개의 요청을 모니터링한 후 해당 작업을 계속할지 여부를 결정 (closed -> open으로 바꿔야할지 판별)
+      permittedNumberOfCallsInHalfOpenState: 2 # half-open 상태에서 허용되는 호출 수
+      failureRateThreshold: 50 # 실패율이 50% 이상이면 circuit open
+      waitDurationInOpenState: 10000 # circuit open 상태에서 대기 시간 (ms)
