@@ -40,6 +40,12 @@
 			<artifactId>spring-cloud-function-context</artifactId>
 		</dependency>
 
+		<!--	cloud function을 api endpoint에 노출	-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-function-web</artifactId>-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
